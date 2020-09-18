@@ -86,3 +86,9 @@ map<string, Tokens> reservedWordTokens = {
 	{"var", VAR}, 
 	{"while", WHILE}
 };
+
+Tokens searchKeyWord(string s){
+	map<string, Tokens>::iterator it = reservedWordTokens.find(s);
+	if(it == reservedWordTokens.end()) return UNKNOWN;
+	return it->second;
+}
