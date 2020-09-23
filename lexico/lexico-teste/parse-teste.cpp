@@ -12,6 +12,7 @@ using namespace std;
 ParseTest::ParseTest(){}
 
 void ParseTest::teste1(){
+	printf("TEST #1\n");
 	string text = "potato_\n";
 	string parsedText = "";
 	int i = 0;
@@ -20,13 +21,14 @@ void ParseTest::teste1(){
 		i++;
 	}
 	cout << "Parsing the text " << text;
-	cout << "Found " << parsedText << endl << endl;
+	cout << "Found " << parsedText << endl;
 
 	return;
 
 }
 
 void ParseTest::teste2(){
+	printf("TEST #2\n");
 	string text = "potato_ &*$#!@";
 	string parsedText = "";
 	int i = 0;
@@ -35,12 +37,13 @@ void ParseTest::teste2(){
 		i++;
 	}
 	cout << "Parsing the text " << text << endl;
-	cout << "Found " << parsedText << endl << endl;
+	cout << "Found " << parsedText << endl;
 
 	return;
 }
 
 void ParseTest::teste3(){
+	printf("TEST #3\n");
 	string text = "123849 @#41";
 	string parsedText = "";
 	int i = 0;
@@ -49,15 +52,17 @@ void ParseTest::teste3(){
 		i++;
 	}
 	cout << "Parsing the text " << text << endl;
-	cout << "Found " << parsedText << endl << endl;
+	cout << "Found " << parsedText << endl;
 
 	return;
 }
 
 void ParseTest::run(){
+	printf("Running parsing tests...\n");
 	teste1();
 	teste2();
 	teste3();
+	printf("\n");
 
 	return;
 }

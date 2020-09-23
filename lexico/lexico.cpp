@@ -8,11 +8,20 @@
 
 using namespace std;
 
+Constant::Constant(int type, char cVal, int nVal, string sVal){
+	this->type = type;
+	this->cVal = cVal;
+	this->nVal = nVal;
+	this->sVal = sVal;
+}
+
 Lexico::Lexico(string program){
 	this->constants.empty();
 	this->identifiers.empty();
 	this->programFileName = program;
 	this->tokOps = TokensOperations();
+	this->unread = false;
+	this->lastChar = ' ';
 
 	if(this->programFileName != "teste") {
 		const char* programName = this->programFileName.c_str();
@@ -30,26 +39,26 @@ void Lexico::updateProgram(string program){
 	this->programFileName = program;
 	if(this->programFileName != "teste") {
 		const char* programName = this->programFileName.c_str();
-		this->pFile = fopen(programName, "w+");
+		this->pFile = fopen(programName, "r");
 	}
 }
 
 int Lexico::addCharConstant(char c){
-	Constant cons = {0, c, NULL, NULL};
+	Constant cons = Constant(0, c, -1, "");
 	this->constants.push_back(cons);
 
 	return this->constants.size() - 1;
 }
 
 int Lexico::addIntConstant(int n){
-	Constant cons = {1, NULL, n, NULL};
+	Constant cons = Constant(1, '\0', n, "");
 	this->constants.push_back(cons);
 
 	return this->constants.size() - 1;
 }
 
 int Lexico::addStringConstant(string s){
-	Constant cons = {1, NULL, NULL, s};
+	Constant cons = Constant(1, '\0', -1, s);
 	this->constants.push_back(cons);
 
 	return this->constants.size() - 1;
@@ -75,9 +84,19 @@ string Lexico::getStringConstant(int n){
 
 char Lexico::readChar(){
 	char c;
-	fscanf(pFile, "%c", &c);
+	if(this->unread){
+		this->unread = false;
+		c = this->lastChar;
+	} else {
+		if(fscanf(this->pFile, "%c", &c) == EOF) c = EOF;
+	}
 
 	return c;
+}
+
+void Lexico::unreadChar(char lastChar){
+	this->unread = true;
+	this->lastChar = lastChar;
 }
 
 bool Lexico::isAlpha(char c){
@@ -125,10 +144,12 @@ Tokens Lexico::nextToken(void){
 	//loop do estado inicial para pular os separadores
 	while(true){
 		nextChar = readChar();
-		if(nextChar != ' ' and nextChar != '\n') break;
+		if(nextChar != ' ' and nextChar != '\n' and nextChar != '\t') break;
 	}
 
-	if(isAlpha(nextChar)){
+	if(nextChar == EOF){
+		token = END_OF_FILE;
+	} else if(isAlpha(nextChar)){
 		string s = "";
 		while(isAlphaNumeric(nextChar) or nextChar == '_'){
 			s.push_back(nextChar);
@@ -137,10 +158,11 @@ Tokens Lexico::nextToken(void){
 
 		token = tokOps.searchKeyWord(s);
 		if(token == UNKNOWN){
-			// TO-DO: implement registerIdentifier
 			this->registerIdentifier(s);
 			token = ID;
 		}
+
+		this->unreadChar(nextChar);
 
 	} else if(isDigit(nextChar)){
 		string s = "";
@@ -153,6 +175,8 @@ Tokens Lexico::nextToken(void){
 		int numeral = getNumber(s);
 		tokenSecundario = addIntConstant(numeral);
 
+		this->unreadChar(nextChar);
+
 	} else if(nextChar == '"'){
 		string s = "";
 		s.push_back(nextChar);
@@ -163,7 +187,7 @@ Tokens Lexico::nextToken(void){
 		}
 		s.push_back('"');
 
-		token = STRING;
+		token = STRINGVAL;
 		tokenSecundario = addStringConstant(s);
 
 	} else {
@@ -234,6 +258,7 @@ Tokens Lexico::nextToken(void){
 					token = EQUAL_EQUAL;
 				} else {
 					token = EQUALS;
+					this->unreadChar(nextChar);
 				}
 				break;
 			case '<':
@@ -242,6 +267,7 @@ Tokens Lexico::nextToken(void){
 					token = LESS_OR_EQUAL;
 				} else {
 					token = LESS_THAN;
+					this->unreadChar(nextChar);
 				}
 				break;
 			case '>':
@@ -250,6 +276,7 @@ Tokens Lexico::nextToken(void){
 					token = GREATER_OR_EQUAL;
 				} else {
 					token = GREATER_THAN;
+					this->unreadChar(nextChar);
 				}
 				break;
 			case '!':
@@ -258,6 +285,7 @@ Tokens Lexico::nextToken(void){
 					token = NOT_EQUAL;
 				} else {
 					token = NOT;
+					this->unreadChar(nextChar);
 				}
 				break;
 			case '+':
@@ -266,6 +294,7 @@ Tokens Lexico::nextToken(void){
 					token = PLUS_PLUS;
 				} else {
 					token = PLUS;
+					this->unreadChar(nextChar);
 				}
 				break;
 			case '-':
@@ -274,6 +303,7 @@ Tokens Lexico::nextToken(void){
 					token = MINUS_MINUS;
 				} else {
 					token = MINUS;
+					this->unreadChar(nextChar);
 				}
 				break;
 			default:
@@ -281,17 +311,16 @@ Tokens Lexico::nextToken(void){
 		}
 	}
 
-	// cout << "Found this token!" << this->tokOps.searchToken(token) << endl;
-
 	return token;
 }
 
 vector<Tokens> Lexico::run(){
 	vector<Tokens> tokenList;
-	Tokens token = UNKNOWN;
+	Tokens token;
 
 	while(token != END_OF_FILE) {
 		token = this->nextToken();
+		string tokenName = this->tokOps.searchToken(token);
 		tokenList.push_back(token);
 	}
 

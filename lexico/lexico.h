@@ -7,12 +7,15 @@
 
 using namespace std;
 
-typedef struct Constant {
-	int type; // 0-char, 1-int, 2- string
-	char cVal;
-	int nVal;
-	string sVal;
-} Constant;
+class Constant {
+	public:
+		int type; // 0-char, 1-int, 2- string
+		char cVal;
+		int nVal;
+		string sVal;
+
+		Constant(int type, char cVal, int nVal, string sVal);
+};
 
 class Lexico {
 
@@ -23,6 +26,8 @@ class Lexico {
 		FILE* pFile;
 		map <string, int> identifiers;
 		TokensOperations tokOps;
+		bool unread;
+		char lastChar;
 
 		Lexico(string program);
 		~Lexico();
@@ -34,6 +39,7 @@ class Lexico {
 		int getIntConstant(int n);
 		string getStringConstant(int n);
 		char readChar();
+		void unreadChar(char lastChar);
 		bool isAlpha(char c);
 		bool isDigit(char c);
 		bool isAlphaNumeric(char c);

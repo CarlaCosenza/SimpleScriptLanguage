@@ -9,8 +9,8 @@ make: main.cpp
 run: make
 	./$(EXE)
 
-makeTest: $(LEX_TEST)lexico-test.cpp $(LEX_TEST)parse-teste.cpp $(LEX_TEST)next-token-test.cpp
-	g++ $(LEX_TEST)lexico-test.cpp $(LEX_TEST)parse-teste.cpp $(LEX_TEST)next-token-test.cpp -std=c++11
+makeTest: $(LEX_TEST)lexico-test.cpp $(LEX_TEST)parse-teste.cpp $(LEX_TEST)next-token-test.cpp $(LEX_TEST)run-test.cpp
+	g++ $(LEX_TEST)lexico-test.cpp $(LEX_TEST)parse-teste.cpp $(LEX_TEST)next-token-test.cpp $(LEX_TEST)run-test.cpp lexico/tokens.cpp lexico/lexico.cpp -std=c++11
 
 runTest: makeTest
 	./a.out

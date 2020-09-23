@@ -5,19 +5,21 @@
 
 #include "parse-teste.h"
 #include "next-token-test.h"
+#include "run-test.h"
 
 using namespace std;
 
 int main(int argc, char** argv){
 
-	printf("Starting testing of the lexical analyzer.\n");
+	printf("STARTING TESTING OF LEXICAL ANALYZER.\n \n");
 
 	ParseTest parseTesting = ParseTest();
-	// NextTokenTest nextTokenTest = NextTokenTest();
-
+	NextTokenTest nextTokenTest = NextTokenTest();
+	RunTest runTest = RunTest();
 
 	parseTesting.run();
-	// nextTokenTest.run();
+	nextTokenTest.run();
+	runTest.run();
 
 	return 0;
 }
