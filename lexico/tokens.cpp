@@ -2,71 +2,11 @@
 #include <map>
 #include <string>
 
+#include "tokens.h"
+
 using namespace std;
 
-typedef enum Tokens {
-
-	//palavras reservadas
-	ARRAY, 
-	BOOLEAN, 
-	BREAK, 
-	CHAR, 
-	CONTINUE, 
-	DO, 
-	ELSE, 
-	FALSE, 
-	FUNCTION, 
-	IF, 
-	INTEGER, 
-	OF, 
-	STRING, 
-	STRUCT, 
-	TRUE, 
-	TYPE, 
-	VAR, 
-	WHILE,
-
-	//Simbolos
-	COLON, 
-	SEMI_COLON, 
-	COMMA, 
-	EQUALS, 
-	LEFT_SQUARE, 
-	RIGHT_SQUARE, 
-	LEFT_BRACES, 
-	RIGHT_BRACES, 
-	LEFT_PARENTHESIS, 
-	RIGHT_PARENTHESIS, 
-	AND, 
-	OR, 
-	LESS_THAN, 
-	GREATER_THAN, 
-	LESS_OR_EQUAL, 
-	GREATER_OR_EQUAL, 
-	NOT_EQUAL, 
-	EQUAL_EQUAL, 
-	PLUS, 
-	PLUS_PLUS, 
-	MINUS, 
-	MINUS_MINUS, 
-	TIMES, 
-	DIVIDE, 
-	DOT, 
-	NOT,
-
-	//Tokens regulares
-	CHARACTER, 
-	NUMERAL, 
-	STRINGVAL, 
-	ID,
-
-	//Token desconhecido
-	UNKNOWN
-
-
-} Tokens;
-
-map<string, Tokens> reservedWordTokens = {
+map<string, Tokens> TokensOperations::reservedWordTokens = {
 	{"array", ARRAY}, 
 	{"boolean", BOOLEAN}, 
 	{"break", BREAK}, 
@@ -87,8 +27,70 @@ map<string, Tokens> reservedWordTokens = {
 	{"while", WHILE}
 };
 
-Tokens searchKeyWord(string s){
+map<Tokens, string> TokensOperations::tokenNames = {
+	{ARRAY, "Array"},
+    {BOOLEAN,  "Boolean"},
+	{BREAK,    "Break"},
+	{CHAR,     "Char"},
+	{CONTINUE, "Continue"},
+	{DO,       "Do"},
+	{ELSE,     "Else"},
+	{FUNCTION, "Function"},
+	{IF,       "If"},
+	{INTEGER,  "Integer"},
+	{OF,       "Of"},
+	{STRING,   "String"},
+	{STRUCT,   "Struct"},
+	{TRUE,     "True"},
+	{FALSE,    "False"},
+	{TYPE,     "Type"},
+	{VAR,      "Var"},
+	{WHILE,    "While"},
+	{COLON,            "Colon"},
+	{SEMI_COLON,        "Semicolon"},
+	{COMMA,            "Comma"},
+	{EQUALS,           "Equals"},
+	{LEFT_SQUARE,       "LeftSquare"},
+	{RIGHT_SQUARE,      "RightSquare"},
+	{LEFT_BRACES,       "LeftBraces"},
+	{RIGHT_BRACES,      "RightBraces"},
+	{LEFT_PARENTHESIS,  "LeftParenthesis"},
+	{RIGHT_PARENTHESIS, "RightParenthesis"},
+	{AND,              "And"},
+	{OR,               "Or"},
+	{LESS_THAN,         "LessThan"},
+	{GREATER_THAN,      "GreaterThan"},
+	{LESS_OR_EQUAL,      "LessOrEqual"},
+	{GREATER_OR_EQUAL,   "GreaterOrEqual"},
+	{NOT_EQUAL,         "NotEqual"},
+	{EQUAL_EQUAL,       "EqualEqual"},
+	{PLUS,             "Plus"},
+	{PLUS_PLUS,         "PlusPlus"},
+	{MINUS,            "Minus"},
+	{MINUS_MINUS,       "MinusMinus"},
+	{TIMES,            "Times"},
+	{DIVIDE,           "Divide"},
+	{DOT,              "Dot"},
+	{NOT,              "Not"},
+	{CHARACTER, "Character"},
+	{NUMERAL,   "Numeral"},
+	{STRINGVAL, "Stringval"},
+	{ID,        "ID"},
+	{UNKNOWN, "UNKNOWN"},
+	{END_OF_FILE, "EOF"}
+};
+
+TokensOperations::TokensOperations(){}
+
+string TokensOperations::searchToken(Tokens token){
+	map<Tokens, string>::iterator it = tokenNames.find(token);
+	if(it == tokenNames.end()) return "unknown";
+	return it->second;
+}
+
+Tokens TokensOperations::searchKeyWord(string s){
 	map<string, Tokens>::iterator it = reservedWordTokens.find(s);
 	if(it == reservedWordTokens.end()) return UNKNOWN;
 	return it->second;
 }
+
