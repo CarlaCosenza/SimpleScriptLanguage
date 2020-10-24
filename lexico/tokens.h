@@ -7,6 +7,9 @@ using namespace std;
 
 typedef enum Tokens {
 
+	//Token desconhecido
+	UNKNOWN = -1,
+
 	//palavras reservadas
 	INTEGER,
 	CHAR,
@@ -58,9 +61,6 @@ typedef enum Tokens {
 	CHARACTER, 
 	NUMERAL, 
 	STRINGVAL, 
-
-	//Token desconhecido
-	UNKNOWN,
 
 	//EOF
 	END_OF_FILE,
