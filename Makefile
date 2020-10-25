@@ -1,5 +1,6 @@
 EXE=main
 LEX_TEST=lexico/lexico-teste/
+SIN_TEST=sintatico/sintatico-teste/
 
 make: main.cpp
 # 	g++ -c lexico/tokens.cpp -std=c++11  
@@ -12,5 +13,11 @@ run: make
 makeTestLex: $(LEX_TEST)lexico-test.cpp $(LEX_TEST)parse-teste.cpp $(LEX_TEST)next-token-test.cpp $(LEX_TEST)run-test.cpp
 	g++ $(LEX_TEST)lexico-test.cpp $(LEX_TEST)parse-teste.cpp $(LEX_TEST)next-token-test.cpp $(LEX_TEST)run-test.cpp lexico/tokens.cpp lexico/lexico.cpp -std=c++11
 
-runTest: makeTestLex
+runTestLex: makeTestLex
+	./a.out
+
+makeTestSin: $(SIN_TEST)sintatico-teste.cpp $(SIN_TEST)parse-teste.cpp
+	g++ $(SIN_TEST)sintatico-teste.cpp $(SIN_TEST)parse-teste.cpp lexico/tokens.cpp lexico/lexico.cpp sintatico/sintatico.cpp naoTerminais/naoTerminais.cpp -std=c++11
+
+runTestSin: makeTestSin
 	./a.out

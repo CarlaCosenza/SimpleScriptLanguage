@@ -1,10 +1,10 @@
 #include <stdio.h>
-#include <vector>
-#include <string>
 
 #include "sintatico.h"
+#include "../lexico/tokens.h"
+#include "../naoTerminais/naoTerminais.h"
 
-using namespace std
+using namespace std;
 
 vector <vector <string> > Sintatico::actionTable = {
 	{" ", " ", " ", " ", "s7", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "s6", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "1", "2", "3", " ", "5", " ", "4", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "},
@@ -188,5 +188,87 @@ vector <vector <string> > Sintatico::actionTable = {
 	{" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "r30", "r30", " ", " ", " ", " ", " ", " ", " ", "r30", " ", "r30", "r30", "r30", "r30", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "r30", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "},
 	{" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "r86", "r86", " ", " ", " ", " ", " ", " ", " ", "r86", "r86", "r86", "r86", "r86", "r86", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "r86", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "180", " ", " "},
 	{" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "r81", " ", " ", " ", " ", " ", " ", " ", " ", "s110", " ", "s67", "s68", "s71", "s72", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "s23", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "177", " ", " ", " ", " ", " ", " ", "70", " ", "73", " ", " ", " ", " ", " ", " ", "69", " ", " ", " ", " ", " ", " ", " "},
+};
+
+Sintatico::Sintatico(){
+	this->naoTermOp = NaoTerminaisOperator();
 }
 
+string Sintatico::run(Lexico lexi){
+
+	int state = 0;
+	int rule = 0;
+	Tokens currentToken = lexi.nextToken();
+	string action = this->actionTable[state][currentToken];
+
+	while(!this->accept(action)){
+
+		state = shift(action);
+		if(state != -1){
+			this->stateStack.push(state);
+
+			currentToken = lexi.nextToken();
+			action = this->actionTable[state][currentToken];
+
+			continue;
+		}
+
+		rule = reduce(action);
+		if(rule != -1){
+
+			int amountToPop = this->naoTermOp.ruleNumberOfTokens[rule-1];
+			for(int i = 0 ; i < amountToPop ; i++) this->stateStack.pop();
+
+			int temporaryState = this->stateStack.top();
+
+			int leftToken = this->naoTermOp.ruleLeftTokens[rule-1];
+			string stateString = this->actionTable[temporaryState][leftToken];
+
+			state = this->getNumberFromAction(stateString);
+			if(state == -1){
+				return "error";
+			}
+
+			this->stateStack.push(state);
+			action = this->actionTable[state][currentToken];
+
+			continue;
+		}
+
+		return "Error at line";
+	}
+
+	return "success";
+
+}
+
+
+bool Sintatico::accept(string action){
+	return (action == "acc");
+}
+
+int Sintatico::shift(string action){
+	if(action.size() == 0) return -1;
+	if(action[0] != 's') return -1;
+
+	int n = this->getNumberFromAction(action);
+
+	return n;
+}
+
+int Sintatico::reduce(string action){
+	if(action.size() == 0) return -1;
+	if(action[0] != 'r') return -1;
+
+	int n = this->getNumberFromAction(action);
+
+	return n;
+}
+
+int Sintatico::getNumberFromAction(string action){
+	int num = 0;
+	for(int i = 1 ; i < action.size() ; i++){
+		num = num*10 + (action[i] - '0');
+	}
+	return num;
+}
