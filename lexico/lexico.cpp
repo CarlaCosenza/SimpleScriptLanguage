@@ -22,6 +22,7 @@ Lexico::Lexico(string program){
 	this->tokOps = TokensOperations();
 	this->unread = false;
 	this->lastChar = ' ';
+	this->line = 0;
 
 	if(this->programFileName != "teste") {
 		const char* programName = this->programFileName.c_str();
@@ -144,6 +145,7 @@ Tokens Lexico::nextToken(void){
 	//loop do estado inicial para pular os separadores
 	while(true){
 		nextChar = readChar();
+		if(nextChar == '\n') this->line++;
 		if(nextChar != ' ' and nextChar != '\n' and nextChar != '\t') break;
 	}
 

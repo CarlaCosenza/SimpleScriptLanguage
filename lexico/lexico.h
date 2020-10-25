@@ -28,6 +28,7 @@ class Lexico {
 		TokensOperations tokOps;
 		bool unread;
 		char lastChar;
+		int line;
 
 		Lexico(string program);
 		~Lexico();
