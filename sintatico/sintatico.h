@@ -19,7 +19,7 @@ class Sintatico {
 		NaoTerminaisOperator naoTermOp;
 
 		Sintatico();
-		string run(Lexico lexico);
+		string run(Lexico *lexico);
 		bool accept(string action);
 		int shift(string action);
 		int reduce(string action);

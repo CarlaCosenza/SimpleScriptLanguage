@@ -59,8 +59,8 @@ typedef enum Tokens {
 
 	//Tokens regulares
 	CHARACTER, 
-	NUMERAL, 
 	STRINGVAL, 
+	NUMERAL, 
 
 	//EOF
 	END_OF_FILE,

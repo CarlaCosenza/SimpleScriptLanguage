@@ -4,7 +4,7 @@
 #include "../lexico/tokens.h"
 
 typedef enum NaoTerminais {
-	PLINE = EOF + 1,
+	PLINE = END_OF_FILE + 1,
 	P,
 	LDE,
 	DE,
@@ -50,7 +50,7 @@ typedef enum NaoTerminais {
 class NaoTerminaisOperator{
 
 	public:
-		static vector <int> ruleLeftTokens;
+		static vector <NaoTerminais> ruleLeftTokens;
 		static vector <int> ruleNumberOfTokens;
 };
 

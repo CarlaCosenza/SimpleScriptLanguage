@@ -27,6 +27,7 @@ Lexico::Lexico(string program){
 	if(this->programFileName != "teste") {
 		const char* programName = this->programFileName.c_str();
 		this->pFile = fopen(programName, "w+");
+		if(this->pFile == NULL) printf("There was an error opening the file\n");
 	}
 }
 
@@ -35,12 +36,14 @@ Lexico::~Lexico(){
 }
 
 void Lexico::updateProgram(string program){
+	this->line = 0;
 	if(this->programFileName != "teste") fclose(this->pFile);
 
 	this->programFileName = program;
 	if(this->programFileName != "teste") {
 		const char* programName = this->programFileName.c_str();
 		this->pFile = fopen(programName, "r");
+		if(this->pFile == NULL) printf("There was an error opening the file\n");
 	}
 }
 

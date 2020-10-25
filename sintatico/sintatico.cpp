@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <iostream>
 
 #include "sintatico.h"
 #include "../lexico/tokens.h"
@@ -194,20 +195,23 @@ Sintatico::Sintatico(){
 	this->naoTermOp = NaoTerminaisOperator();
 }
 
-string Sintatico::run(Lexico lexi){
+string Sintatico::run(Lexico *lexi){
 
 	int state = 0;
+	this->stateStack.push(state);
 	int rule = 0;
-	Tokens currentToken = lexi.nextToken();
+	Tokens currentToken = lexi->nextToken();
 	string action = this->actionTable[state][currentToken];
 
 	while(!this->accept(action)){
+
+		string tokenString = lexi->tokOps.searchToken(currentToken);
 
 		state = shift(action);
 		if(state != -1){
 			this->stateStack.push(state);
 
-			currentToken = lexi.nextToken();
+			currentToken = lexi->nextToken();
 			action = this->actionTable[state][currentToken];
 
 			continue;
@@ -215,7 +219,6 @@ string Sintatico::run(Lexico lexi){
 
 		rule = reduce(action);
 		if(rule != -1){
-
 			int amountToPop = this->naoTermOp.ruleNumberOfTokens[rule-1];
 			for(int i = 0 ; i < amountToPop ; i++) this->stateStack.pop();
 
@@ -235,7 +238,7 @@ string Sintatico::run(Lexico lexi){
 			continue;
 		}
 
-		return "Error at line";
+		return "Error at line " + to_string(lexi->line);
 	}
 
 	return "success";
@@ -251,6 +254,7 @@ int Sintatico::shift(string action){
 	if(action.size() == 0) return -1;
 	if(action[0] != 's') return -1;
 
+	action[0] = '0';
 	int n = this->getNumberFromAction(action);
 
 	return n;
@@ -260,6 +264,7 @@ int Sintatico::reduce(string action){
 	if(action.size() == 0) return -1;
 	if(action[0] != 'r') return -1;
 
+	action[0] = '0';
 	int n = this->getNumberFromAction(action);
 
 	return n;
@@ -267,7 +272,7 @@ int Sintatico::reduce(string action){
 
 int Sintatico::getNumberFromAction(string action){
 	int num = 0;
-	for(int i = 1 ; i < action.size() ; i++){
+	for(int i = 0 ; i < action.size() ; i++){
 		num = num*10 + (action[i] - '0');
 	}
 	return num;
