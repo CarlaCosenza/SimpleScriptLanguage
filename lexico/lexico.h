@@ -2,6 +2,8 @@
 #define lexico
 
 #include <map>
+#include <string>
+#include <vector>
 
 #include "tokens.h"
 
@@ -28,6 +30,7 @@ class Lexico {
 		TokensOperations tokOps;
 		bool unread;
 		char lastChar;
+		int tokenSecundario;
 		int line;
 
 		Lexico(string program);

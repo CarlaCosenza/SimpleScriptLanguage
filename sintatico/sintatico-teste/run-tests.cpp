@@ -9,7 +9,8 @@ RunTestSintatico::RunTestSintatico(){}
 
 void RunTestSintatico::teste(string expected){
 
-	string result = this->analisadorSintatico.run(&(this->analisadorLexico));
+	Sintatico analisadorSintatico = Sintatico(&(this->analisadorLexico));
+	string result = analisadorSintatico.run();
 	cout << "Found " << result << endl;
 	cout << "Expected " << expected << endl;
 }

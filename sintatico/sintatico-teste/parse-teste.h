@@ -6,7 +6,7 @@
 class ParseTesteSintatico{    
 
 	public:
-		Sintatico sin = Sintatico();
+		Sintatico sin = Sintatico(NULL);
 
 		ParseTesteSintatico(){};
 		void shiftTeste(string s, int expected);

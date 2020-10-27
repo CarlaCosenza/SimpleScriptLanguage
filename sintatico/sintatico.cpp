@@ -191,27 +191,29 @@ vector <vector <string> > Sintatico::actionTable = {
 	{" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "r81", " ", " ", " ", " ", " ", " ", " ", " ", "s110", " ", "s67", "s68", "s71", "s72", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "s23", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "177", " ", " ", " ", " ", " ", " ", "70", " ", "73", " ", " ", " ", " ", " ", " ", "69", " ", " ", " ", " ", " ", " ", " "},
 };
 
-Sintatico::Sintatico(){
+Sintatico::Sintatico(Lexico* analisadorLexico){
+	this->analisadorSemantico = Semantico(analisadorLexico);
 	this->naoTermOp = NaoTerminaisOperator();
+	this->analisadorLexico = analisadorLexico;
 }
 
-string Sintatico::run(Lexico *lexi){
+string Sintatico::run(){
 
 	int state = 0;
 	this->stateStack.push(state);
 	int rule = 0;
-	Tokens currentToken = lexi->nextToken();
+	Tokens currentToken = this->analisadorLexico->nextToken();
 	string action = this->actionTable[state][currentToken];
 
 	while(!this->accept(action)){
 
-		string tokenString = lexi->tokOps.searchToken(currentToken);
+		string tokenString = this->analisadorLexico->tokOps.searchToken(currentToken);
 
 		state = shift(action);
 		if(state != -1){
 			this->stateStack.push(state);
 
-			currentToken = lexi->nextToken();
+			currentToken = this->analisadorLexico->nextToken();
 			action = this->actionTable[state][currentToken];
 
 			continue;
@@ -235,10 +237,12 @@ string Sintatico::run(Lexico *lexi){
 			this->stateStack.push(state);
 			action = this->actionTable[state][currentToken];
 
+			this->analisadorSemantico.parseRule(rule);
+
 			continue;
 		}
 
-		return "Error at line " + to_string(lexi->line);
+		return "Error at line " + to_string(this->analisadorLexico->line);
 	}
 
 	return "success";

@@ -26,7 +26,7 @@ Lexico::Lexico(string program){
 
 	if(this->programFileName != "teste") {
 		const char* programName = this->programFileName.c_str();
-		this->pFile = fopen(programName, "w+");
+		this->pFile = fopen(programName, "r");
 		if(this->pFile == NULL) printf("There was an error opening the file\n");
 	}
 }
@@ -137,13 +137,14 @@ int Lexico::registerIdentifier(string s){
 		this->identifiers[s] = secondaryToken;
 	}
 
+	this->tokenSecundario = secondaryToken;
+
 	return secondaryToken;
 }
 
 Tokens Lexico::nextToken(void){
 	char nextChar;
 	Tokens token;
-	int tokenSecundario;
 
 	//loop do estado inicial para pular os separadores
 	while(true){
@@ -178,7 +179,7 @@ Tokens Lexico::nextToken(void){
 
 		token = NUMERAL;
 		int numeral = getNumber(s);
-		tokenSecundario = addIntConstant(numeral);
+		this->tokenSecundario = this->addIntConstant(numeral);
 
 		this->unreadChar(nextChar);
 
@@ -193,7 +194,7 @@ Tokens Lexico::nextToken(void){
 		s.push_back('"');
 
 		token = STRINGVAL;
-		tokenSecundario = addStringConstant(s);
+		this->tokenSecundario = this->addStringConstant(s);
 
 	} else {
 		switch(nextChar){
@@ -236,8 +237,7 @@ Tokens Lexico::nextToken(void){
 			case '\'':
 				nextChar = readChar();
 				token = CHARACTER;
-				tokenSecundario = addCharConstant
-				(nextChar);
+				this->tokenSecundario = this->addCharConstant(nextChar);
 				nextChar = readChar(); // pular o ‘ 
 				nextChar = readChar();
 				break;

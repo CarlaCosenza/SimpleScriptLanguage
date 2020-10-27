@@ -11,7 +11,6 @@ class RunTestSintatico {
 	public:
 
 		Lexico analisadorLexico = Lexico("teste");
-		Sintatico analisadorSintatico = Sintatico();
 
 		RunTestSintatico();
 		void teste(string expected);
