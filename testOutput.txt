@@ -1,0 +1,46 @@
+g++ lexico/lexico-teste/lexico-test.cpp lexico/lexico-teste/parse-teste.cpp lexico/lexico-teste/next-token-test.cpp lexico/lexico-teste/run-test.cpp lexico/tokens.cpp lexico/lexico.cpp -std=c++11
+./a.out
+STARTING TESTING OF LEXICAL ANALYZER.
+ 
+Running parsing tests...
+TEST #1
+Parsing the text potato_
+Found potato_
+TEST #2
+Parsing the text potato_ &*$#!@
+Found potato_
+TEST #3
+Parsing the text 123849 @#41
+Found 123849
+
+Running next token tests...
+TEST #1
+Found token ID
+Expected token ID
+TEST #2
+Found token ID
+Expected token ID
+TEST #3
+Found token Numeral
+Expected token NUMERAL
+
+Running full lexical tests...
+TEST #1
+Found tokens: {ID, Numeral, ID, EOF, }
+Expected tokens: {ID, Numeral, ID, EOF, }
+TEST #2
+Found tokens: {ID, Stringval, EOF, }
+Expected tokens: {ID, Stringval, EOF, }
+TEST #3
+Found tokens: {Var, ID, Integer, EOF, }
+Expected tokens: {Var, ID, Integer, EOF, }
+TEST #4
+Found tokens: {ID, Equals, Character, EOF, }
+Expected tokens: {ID, Equals, Character, EOF, }
+TEST 5
+Found tokens: {Colon, Semicolon, Comma, Equals, LeftSquare, RightSquare, LeftBraces, RightBraces, LeftParenthesis, RightParenthesis, And, Or, LessThan, GreaterThan, LessOrEqual, GreaterOrEqual, NotEqual, EqualEqual, Plus, PlusPlus, Minus, MinusMinus, Times, Divide, Dot, Not, EOF, }
+Expected tokens: {Colon, Semicolon, Comma, Equals, LeftSquare, RightSquare, LeftBraces, RightBraces, LeftParenthesis, RightParenthesis, And, Or, LessThan, GreaterThan, LessOrEqual, GreaterOrEqual, NotEqual, EqualEqual, Plus, PlusPlus, Minus, MinusMinus, Times, Divide, Dot, Not, EOF, }
+TEST #6
+Found tokens: {Function, ID, LeftParenthesis, ID, Colon, Integer, RightParenthesis, Colon, Integer, LeftBraces, Var, ID, Colon, Integer, Semicolon, Var, ID, Colon, Integer, Semicolon, Var, ID, Colon, Integer, Semicolon, ID, Equals, Numeral, Semicolon, ID, Equals, Numeral, Semicolon, RightBraces, EOF, }
+Expected tokens: {Function, ID, LeftParenthesis, ID, Colon, Integer, RightParenthesis, Colon, Integer, LeftBraces, Var, ID, Colon, Integer, Semicolon, Var, ID, Colon, Integer, Semicolon, Var, ID, Colon, Integer, Semicolon, ID, Equals, Numeral, Semicolon, ID, Equals, Numeral, Semicolon, RightBraces, EOF, }
+
